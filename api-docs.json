@@ -1,0 +1,378 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Company API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/companies/building/{buildingId}": {
+            "get": {
+                "summary": "Get companies by building",
+                "description": "Returns a list of companies located in a specific building.",
+                "operationId": "adf889682fc6da158fb2380f3994a38e",
+                "parameters": [
+                    {
+                        "name": "buildingId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of companies in the specified building.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Company"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/companies/category/{categoryId}": {
+            "get": {
+                "summary": "Get companies by category",
+                "description": "Returns a list of companies in a specific category.",
+                "operationId": "c0774722b105f97b50a4a31bb1d0ddec",
+                "parameters": [
+                    {
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of companies in the specified category.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Company"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/companies/location": {
+            "get": {
+                "summary": "Get companies by location",
+                "description": "Returns a list of companies located within a specified radius or rectangular area relative to a given point on the map.",
+                "operationId": "49f5f0e7d21d6d67b39b27342c528079",
+                "parameters": [
+                    {
+                        "name": "latitude",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "format": "float"
+                        }
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of companies by location.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Company"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/companies/{id}": {
+            "get": {
+                "summary": "Get company by ID",
+                "description": "Returns information about a company by its unique ID.",
+                "operationId": "5ec6b00efeefe84dca1930d6f1ff99f2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Information about the company.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Company"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/companies/search/activity": {
+            "get": {
+                "summary": "Search companies by activity",
+                "description": "Searches for companies by activity type, returning all companies that match the given activity and related subcategories.",
+                "operationId": "7173ae454dbf977b6ca6d7b8891b72ed",
+                "parameters": [
+                    {
+                        "name": "activity",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of companies matching the activity search.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Company"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/companies/search/name": {
+            "get": {
+                "summary": "Search companies by name",
+                "description": "Searches for companies by their name.",
+                "operationId": "3128e1dac9d451269e11e00d5521392d",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of companies matching the name search.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Company"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/limit": {
+            "get": {
+                "summary": "Get categories with limit",
+                "description": "Returns a list of categories with a specified limit.",
+                "operationId": "eb224a2872e4505d4164a0709fa6f492",
+                "responses": {
+                    "200": {
+                        "description": "A list of categories with a limit.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Category"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Building": {
+                "required": [
+                    "id",
+                    "address",
+                    "company_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "1234 Street Name"
+                    },
+                    "coordinates": {
+                        "type": "array",
+                        "items": {
+                            "type": "float"
+                        },
+                        "example": {
+                            "lat": 40.7128,
+                            "lng": -74.006
+                        }
+                    },
+                    "company": {
+                        "$ref": "#/components/schemas/Company"
+                    }
+                },
+                "type": "object"
+            },
+            "Category": {
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Tech"
+                    },
+                    "parent": {
+                        "$ref": "#/components/schemas/Category"
+                    },
+                    "children": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Category"
+                        }
+                    },
+                    "companies": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Company"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Company": {
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Company A"
+                    },
+                    "buildings": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Building"
+                        }
+                    },
+                    "phones": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Phone"
+                        }
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Category"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CompanyActivity": {
+                "required": [
+                    "company_id",
+                    "category_id"
+                ],
+                "properties": {
+                    "company_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 2
+                    }
+                },
+                "type": "object"
+            },
+            "Phone": {
+                "required": [
+                    "id",
+                    "company_id",
+                    "phone_number"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "example": "+1234567890"
+                    },
+                    "company": {
+                        "$ref": "#/components/schemas/Company"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}
