@@ -35,9 +35,10 @@ class CompanyController extends Controller
      */
     public function getCompaniesByBuilding($buildingId)
     {
-        $building = Building::with('company')->findOrFail($buildingId);
+        $building = Building::with('company.phones','company.categories','company.buildings')->findOrFail($buildingId);
         return response()->json($building->company);
     }
+
 
     /**
      * @OA\Get(
@@ -95,14 +96,23 @@ class CompanyController extends Controller
      */
     public function getCompaniesByLocation(Request $request)
     {
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-        $radius = $request->radius; // in meters
+        $data = $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required|numeric',
+        ]);
 
-        // Use raw SQL to calculate distance (assuming PostGIS support)
+        $latitude = $data['latitude'];
+        $longitude = $data['longitude'];
+        $radius = $data['radius'];
+
         $companies = Building::selectRaw(
             "id, address, coordinates,
-            ST_DistanceSphere(ST_MakePoint(?, ?), ST_MakePoint(coordinates->>'lng', coordinates->>'lat')) AS distance",
+            ST_DistanceSphere(
+                ST_SetSRID(ST_MakePoint(CAST(? AS NUMERIC), CAST(? AS NUMERIC)), 4326),
+                ST_SetSRID(ST_MakePoint(CAST(coordinates->>'longitude' AS NUMERIC),
+                                       CAST(coordinates->>'latitude' AS NUMERIC)), 4326)
+            ) AS distance",
             [$longitude, $latitude]
         )
             ->having('distance', '<', $radius)
@@ -111,6 +121,9 @@ class CompanyController extends Controller
 
         return response()->json($companies);
     }
+
+
+
 
     /**
      * @OA\Get(
@@ -164,12 +177,15 @@ class CompanyController extends Controller
             })
             ->pluck('id');
 
-        $companies = Company::whereHas('categories', function ($query) use ($categories) {
-            $query->whereIn('categories.id', $categories);
-        })->get();
+        $companies = Company::with(['phones', 'categories', 'buildings'])
+            ->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('categories.id', $categories);
+            })
+            ->get();
 
         return response()->json($companies);
     }
+
 
     /**
      * @OA\Get(
@@ -192,35 +208,12 @@ class CompanyController extends Controller
     public function searchCompaniesByName(Request $request)
     {
         $companyName = $request->name;
-        $companies = Company::where('name', 'like', '%' . $companyName . '%')->get();
+
+        $companies = Company::with(['phones', 'categories', 'buildings'])
+            ->where('name', 'like', '%' . $companyName . '%')
+            ->get();
 
         return response()->json($companies);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/categories/limit",
-     *     summary="Get categories with limit",
-     *     description="Returns a list of categories with a specified limit.",
-     *     @OA\Response(
-     *         response=200,
-     *         description="A list of categories with a limit.",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/Category"))
-     *     ),
-     * )
-     */
-    public function getCategoriesWithLimit()
-    {
-        $categories = Category::with([
-            'children' => function ($query) {
-                $query->with([
-                    'children' => function ($query) {
-                        $query->with('children'); // Up to 3 levels
-                    }
-                ]);
-            }
-        ])->whereNull('parent_id')->get();
-
-        return response()->json($categories);
-    }
 }

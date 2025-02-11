@@ -12,7 +12,7 @@ use OpenApi\Annotations as OA;
  *     type="object",
  *     required={"id", "name"},
  *     @OA\Property(property="id", type="integer", example=1),
- *     @OA\Property(property="name", type="string", example="Tech"),
+ *     @OA\Property(property="name", type="string", example="Мясные"),
  *     @OA\Property(property="parent", ref="#/components/schemas/Category"),
  *     @OA\Property(property="children", type="array", @OA\Items(ref="#/components/schemas/Category")),
  *     @OA\Property(property="companies", type="array", @OA\Items(ref="#/components/schemas/Company"))
